@@ -1,0 +1,36 @@
+# Printer chain with single stacker and ingot feeder loop
+
+# This script configures the logic sorters in a five-printer chain. It moves ingots from
+# one printer to the next. Anything that isn't an ingot gets dropped into the stacker.
+# This is a setup script- only need to run once and turn everything off
+
+alias LogicSorterA d0
+alias LogicSorterB d1
+alias LogicSorterC d2
+alias LogicSorterD d3
+alias LogicSorterE d4
+alias IngotFilter r0
+
+define SorterMode 1 # Any = 1
+define SortingClassLen 16 # See SorterInstruction.FilterSlotTypeCompare SORTING_CLASS
+
+s LogicSorterA Mode SorterMode
+s LogicSorterB Mode SorterMode
+s LogicSorterC Mode SorterMode
+s LogicSorterD Mode SorterMode
+s LogicSorterE Mode SorterMode
+
+clr LogicSorterA
+clr LogicSorterB
+clr LogicSorterC
+clr LogicSorterD
+clr LogicSorterE
+
+sll IngotFilter SlotClass.Ingot SortingClassLen
+or IngotFilter IngotFilter SorterInstruction.FilterSlotTypeCompare
+
+put LogicSorterA 0 IngotFilter
+put LogicSorterB 0 IngotFilter
+put LogicSorterC 0 IngotFilter
+put LogicSorterD 0 IngotFilter
+put LogicSorterE 0 IngotFilter

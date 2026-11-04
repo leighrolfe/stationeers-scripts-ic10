@@ -16,7 +16,9 @@ alias GeneratorStatus r3
 alias CurrentPressure r4
 alias PressureDelta1 r5
 alias PressureDelta2 r6
-alias TmpRegister r15
+alias BatteriesCharge r7
+alias TmpRegister1 r14
+alias TmpRegister2 r15
 
 # Constants
 define MinTemp 274.15 # 1 C
@@ -24,6 +26,9 @@ define MaxPressure 45 # kPa
 define MinPressure 5 # kPa
 define DeadzoneLow 293.15 # 20 C
 define DeadzoneHigh 313.15 # 40 C
+
+define BatteriesNetwork HASH("StructureBattery")
+define MaxBatteryCharge 0.95 # 95% charge max
 
 # Initialise pressure to minimum
 move CurrentPressure MinPressure
@@ -51,8 +56,8 @@ j ra
 # Turn fans on above deadzone, off below, hold in between
 setFans:
 l FanStatus VentIn On
-select TmpRegister FanStatus DeadzoneHigh DeadzoneLow # If fan is on use max temp, else store min temp
-sge FanStatus CurrentTemp TmpRegister
+select TmpRegister1 FanStatus DeadzoneHigh DeadzoneLow # If fan is on use max temp, else store min temp
+sge FanStatus CurrentTemp TmpRegister1
 s VentIn On FanStatus
 s VentOut On FanStatus
 j ra
@@ -60,21 +65,26 @@ j ra
 # Hold pressure within deadzone, ramp outside it, clamp to bounds
 setPressure:
 slt PressureDelta1 CurrentTemp DeadzoneLow # 1 if temp below deadzone, else 0
-sgt PressureDelta2 CurrentTemp DeadzoneHigh # 1 if temp above deadzone, else 0
-sub PressureDelta1 PressureDelta1 PressureDelta2 # delta: 1 (cold), -1 (hot), 0 (deadzone)
-add CurrentPressure CurrentPressure PressureDelta1 # apply ramp
+sgt TmpRegister1 CurrentTemp DeadzoneHigh # 1 if temp above deadzone, else 0
+sub PressureDelta2 PressureDelta1 TmpRegister1 # delta: 1 (cold), -1 (hot), 0 (deadzone)
+add CurrentPressure CurrentPressure PressureDelta2 # apply ramp
 
-slt PressureDelta1 CurrentPressure MinPressure # 1 if pressure below floor, else 0
-select CurrentPressure PressureDelta1 MinPressure CurrentPressure # floor to MinPressure if below
+slt TmpRegister1 CurrentPressure MinPressure # 1 if pressure below floor, else 0
+select CurrentPressure TmpRegister1 MinPressure CurrentPressure # floor to MinPressure if below
 
-sgt PressureDelta2 CurrentPressure MaxPressure # 1 if pressure above ceiling, else 0
-select CurrentPressure PressureDelta2 MaxPressure CurrentPressure # ceil to MaxPressure if above
+sgt TmpRegister1 CurrentPressure MaxPressure # 1 if pressure above ceiling, else 0
+select CurrentPressure TmpRegister1 MaxPressure CurrentPressure # ceil to MaxPressure if above
 
 s PressureRegulator Setting CurrentPressure # apply to device
 j ra
 
-# Start generator once above minimum temperature
+# Start generator once above minimum temperature if batteries are not above a certain charge
 setGenerator:
-sgt GeneratorStatus CurrentTemp MinTemp 
+lb BatteriesCharge BatteriesNetwork Ratio Average # 0.0–1.0 - If no batteries on the network, remove the battery checks or rewrite to handle it properly
+
+sgt TmpRegister1 CurrentTemp MinTemp # Is above min temp?
+slt TmpRegister2 BatteriesCharge MaxBatteryCharge # Is below max battery charge?
+and GeneratorStatus TmpRegister1 TmpRegister2  # ON only if temp OK AND batteries not at limit
+
 s GasGenerator On GeneratorStatus
 j ra

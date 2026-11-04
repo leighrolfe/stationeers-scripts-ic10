@@ -1,0 +1,36 @@
+# Description
+
+# Device Aliases (d0-d5)
+alias DeviceName d0
+
+# Register Aliases (r0-r15)
+alias PropertyName r0
+
+# Constants
+define ConstName 0
+
+# Initialise aliases
+s PropertyName ConstName Power
+
+# Main loop
+main:
+yield
+
+jal firstTask
+jal secondTask
+
+sleep 1
+j main
+
+# Task description
+firstTask:
+
+# Do things
+l Property DeviceName Activate
+j ra
+
+# Task description
+secondTask:
+
+# Do things
+j ra

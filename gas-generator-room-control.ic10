@@ -16,6 +16,7 @@ alias GeneratorStatus r3
 alias CurrentPressure r4
 alias PressureDelta1 r5
 alias PressureDelta2 r6
+alias TmpRegister r15
 
 # Constants
 define MinTemp 274.15 # 1 C
@@ -50,8 +51,8 @@ j ra
 # Turn fans on above deadzone, off below, hold in between
 setFans:
 l FanStatus VentIn On
-select FanStatus FanStatus DeadzoneHigh DeadzoneLow
-sgt FanStatus CurrentTemp FanStatus
+select TmpRegister FanStatus DeadzoneHigh DeadzoneLow # If fan is on use max temp, else store min temp
+sge FanStatus CurrentTemp TmpRegister
 s VentIn On FanStatus
 s VentOut On FanStatus
 j ra

@@ -1,0 +1,17 @@
+# CommentStyle
+
+define DefineStyle 0
+l r0 DefineStyle
+
+alias AliasStyle d0
+l r0 AliasStyle Temperature
+
+LabelStyle:
+j LabelStyle
+
+l r0 d0 Temperature
+move r0 0
+move r0 1.5
+sb HASH("MacroStyle") On 0
+s d0 On 0
+l r0 d0 InvalidStyle

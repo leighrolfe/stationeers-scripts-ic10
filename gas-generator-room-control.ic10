@@ -87,4 +87,10 @@ slt TmpRegister2 BatteriesCharge MaxBatteryCharge # Is below max battery charge?
 and GeneratorStatus TmpRegister1 TmpRegister2  # ON only if temp OK AND batteries not at limit
 
 s GasGenerator On GeneratorStatus
+beq TmpRegister2 0 pauseOnBatteryLimit
+j ra
+
+# If generator is turned off due to battery limit, wait for a bit to prevent start stop
+pauseOnBatteryLimit:
+sleep 60
 j ra

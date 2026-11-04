@@ -1,4 +1,8 @@
-# Gas fuel generator room climate and fuel pressure control with deadzone-based hysteresis
+# Gas fuel generator room climate and fuel control with deadzone-based hysteresis
+
+# This script keeps the generator room between 20 and 40 degrees with the fans and
+# heater, adjusts gas pressure to match the temperature, and starts the generator once
+# the room is warm enough and the batteries aren't at their limit.   
 
 # Device Aliases
 alias TempSensor d0

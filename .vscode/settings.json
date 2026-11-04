@@ -1,0 +1,178 @@
+{
+    "Lua.workspace.library": [
+        "c:\\Users\\live\\.vscode-oss\\extensions\\shaneyu.stationeers-0.5.2-win32-x64\\assets\\lua\\stationeers-v1",
+        "c:\\Users\\live\\.vscode-oss\\extensions\\shaneyu.stationeers-0.5.2-win32-x64\\assets\\lua\\stationeers-v1\\stationeerslua-0.2.3"
+    ],
+    "editor.semanticHighlighting.enabled": true,
+    "editor.semanticTokenColorCustomizations": {
+        "enabled": true,
+        "rules": {
+            // "device": "#FD3DB5",
+            // "register": "#FD3DB5",
+            "keyword": "#33691E",
+            // "keyword.declaration": "#FD3DB5",
+            "variable": "#01579B",
+            "variable.declaration": "#C51162",
+            "variable.readonly": "#6200EA",
+            "property": "#2962FF",
+            "property.declaration": "#EA80FC",
+            "label": "#AA00FF",
+            "label.declaration": "#AA00FF",
+            "macro": "#0091EA",
+            "macro.declaration": "#0091EA",
+            "number": "#64DD17",
+            "number.declaration": "#0091EA",
+            "enumMember": "#FF6D00",
+            "enumMember.declaration": "#64DD17",
+            "string": "#00C853",
+            "comment": "#546E7A",
+            "operator": "#FF9100",
+            "variable.other": "#1F2328"
+        }
+    },
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [
+            {
+                "scope": [
+                    "variable.other.readwrite.ic10",
+                    "variable.other.ic10"
+                ],
+                "settings": {
+                    "foreground": "#ec8038"
+                }
+            },
+            {
+                "scope": "keyword.control.instruction.ic10",
+                "settings": {
+                    "foreground": "#00796B"
+                }
+            },
+            {
+                "scope": "entity.name.function.ic10",
+                "settings": {
+                    "foreground": "#00796B"
+                }
+            },
+            {
+                "scope": "variable.language.register.ic10",
+                "settings": {
+                    "foreground": "#AA00FF"
+                }
+            },
+            {
+                "scope": "variable.language.device.ic10",
+                "settings": {
+                    "foreground": "#00BFA5"
+                }
+            },
+            {
+                "scope": "variable.parameter.ic10",
+                "settings": {
+                    "foreground": "#AA00FF"
+                }
+            },
+            {
+                "scope": "entity.name.label.ic10",
+                "settings": {
+                    "foreground": "#AA00FF"
+                }
+            },
+            {
+                "scope": "entity.name.tag.ic10",
+                "settings": {
+                    "foreground": "#AA00FF"
+                }
+            },
+            {
+                "scope": "support.function.macro.ic10",
+                "settings": {
+                    "foreground": "#0091EA"
+                }
+            },
+            {
+                "scope": "string.quoted.double.ic10",
+                "settings": {
+                    "foreground": "#00C853"
+                }
+            },
+            {
+                "scope": "string.quoted.double.hash.ic10",
+                "settings": {
+                    "foreground": "#0091EA"
+                }
+            },
+            {
+                "scope": "string.quoted.double.str.ic10",
+                "settings": {
+                    "foreground": "#0091EA"
+                }
+            },
+            {
+                "scope": "constant.character.escape.ic10",
+                "settings": {
+                    "foreground": "#C51162"
+                }
+            },
+            {
+                "scope": "support.constant.ic10",
+                "settings": {
+                    "foreground": "#6200EA"
+                }
+            },
+            {
+                "scope": "constant.language.enum.ic10",
+                "settings": {
+                    "foreground": "#64DD17"
+                }
+            },
+            {
+                "scope": "constant.numeric.hex.ic10",
+                "settings": {
+                    "foreground": "#FFAB00"
+                }
+            },
+            {
+                "scope": "constant.numeric.binary.ic10",
+                "settings": {
+                    "foreground": "#FF9100"
+                }
+            },
+            {
+                "scope": "constant.numeric.decimal.ic10",
+                "settings": {
+                    "foreground": "#FFD600"
+                }
+            },
+            {
+                "scope": "constant.numeric.ic10",
+                "settings": {
+                    "foreground": "#FFD600"
+                }
+            },
+            {
+                "scope": "comment.line.number-sign.ic10",
+                "settings": {
+                    "foreground": "#546E7A",
+                    "fontStyle": "italic"
+                }
+            },
+            {
+                "scope": "punctuation.definition.comment.ic10",
+                "settings": {
+                    "foreground": "#546E7A",
+                    "fontStyle": "bold"
+                }
+            },
+            {
+                "scope": [
+                    "punctuation.separator.label.ic10",
+                    "punctuation.section.parens.begin.ic10",
+                    "punctuation.section.parens.end.ic10"
+                ],
+                "settings": {
+                    "foreground": "#AA00FF"
+                }
+            }
+        ]
+    },
+}

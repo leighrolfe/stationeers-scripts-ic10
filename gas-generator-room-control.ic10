@@ -1,0 +1,79 @@
+# Gas fuel generator room climate and fuel pressure control with deadzone-based hysteresis
+
+# Device Aliases
+alias TempSensor d0
+alias PressureRegulator d1
+alias GasGenerator d2
+alias VentIn d3
+alias VentOut d4
+alias RoomHeater d5
+
+# Register Aliases
+alias CurrentTemp r0
+alias FanStatus r1
+alias HeaterStatus r2
+alias GeneratorStatus r3
+alias CurrentPressure r4
+alias PressureDelta1 r5
+alias PressureDelta2 r6
+
+# Constants
+define MinTemp 274.15 # 1 C
+define MaxPressure 45 # kPa
+define MinPressure 5 # kPa
+define DeadzoneLow 293.15 # 20 C
+define DeadzoneHigh 313.15 # 40 C
+
+# Initialise pressure to minimum
+move CurrentPressure MinPressure
+
+# Main loop
+main:
+yield
+
+l CurrentTemp TempSensor Temperature
+
+jal setHeaters
+jal setFans
+jal setPressure
+jal setGenerator
+
+sleep 1
+j main
+
+# Raise temperature to operational range for gas generator
+setHeaters:
+sgt HeaterStatus MinTemp CurrentTemp
+s RoomHeater On HeaterStatus
+j ra
+
+# Turn fans on above deadzone, off below, hold in between
+setFans:
+l FanStatus VentIn On
+select FanStatus FanStatus DeadzoneHigh DeadzoneLow
+sgt FanStatus CurrentTemp FanStatus
+s VentIn On FanStatus
+s VentOut On FanStatus
+j ra
+
+# Hold pressure within deadzone, ramp outside it, clamp to bounds
+setPressure:
+slt PressureDelta1 CurrentTemp DeadzoneLow # 1 if temp below deadzone, else 0
+sgt PressureDelta2 CurrentTemp DeadzoneHigh # 1 if temp above deadzone, else 0
+sub PressureDelta1 PressureDelta1 PressureDelta2 # delta: 1 (cold), -1 (hot), 0 (deadzone)
+add CurrentPressure CurrentPressure PressureDelta1 # apply ramp
+
+slt PressureDelta1 CurrentPressure MinPressure # 1 if pressure below floor, else 0
+select CurrentPressure PressureDelta1 MinPressure CurrentPressure # floor to MinPressure if below
+
+sgt PressureDelta2 CurrentPressure MaxPressure # 1 if pressure above ceiling, else 0
+select CurrentPressure PressureDelta2 MaxPressure CurrentPressure # ceil to MaxPressure if above
+
+s PressureRegulator Setting CurrentPressure # apply to device
+j ra
+
+# Start generator once above minimum temperature
+setGenerator:
+sgt GeneratorStatus CurrentTemp MinTemp 
+s GasGenerator On GeneratorStatus
+j ra

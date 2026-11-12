@@ -39,10 +39,12 @@ define MaxBatteryCharge 0.8 # 80% charge max
 define LedDisplay HASH("StructureConsoleLED1x3") # Choose your LED size
 define LedIdTemperature HASH("display-temp") # Use the labeller to set LED to this
 define LedIdPressure HASH("display-pressure")
+define LedIdCharge HASH("display-charge")
 
 # Initialise Optional LED displays
 sbn LedDisplay LedIdTemperature Mode 4 # Degrees Celcius
 sbn LedDisplay LedIdPressure Mode 14 # Pa
+sbn LedDisplay LedIdCharge Mode 1 # Percentage
 
 # Initialise pressure to minimum
 move CurrentPressure MinPressure
@@ -111,8 +113,14 @@ sleep 60
 j ra
 
 updateDisplays:
+# Battery Charge
+sbn LedDisplay LedIdCharge Color Color.Blue
+sbn LedDisplay LedIdCharge Setting BatteriesCharge # Percentage
+
+# Fuel Pressure
+sbn LedDisplay LedIdPressure Color Color.Orange
 mul TmpRegister1 CurrentPressure 1000 # Convert from kPa to Pa
-sbn LedDisplay LedIdPressure Setting TmpRegister1 # Current Fuel Pressure
+sbn LedDisplay LedIdPressure Setting TmpRegister1
 
 # Push current temperature to the LED display in C
 sub TmpRegister1 CurrentTemp KelvinOffset

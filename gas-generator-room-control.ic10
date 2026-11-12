@@ -36,15 +36,19 @@ define BatteriesNetwork HASH("StructureBattery") # Choose your main battery
 define MaxBatteryCharge 0.8 # 80% charge max
 
 # Optional LED displays
+define ProximitySensor HASH("fuel-room-sensor-player")   
+
 define LedDisplay HASH("StructureConsoleLED1x3") # Choose your LED size
 define LedIdTemperature HASH("display-temp") # Use the labeller to set LED to this
 define LedIdPressure HASH("display-pressure")
 define LedIdCharge HASH("display-charge")
+define LedIdPower HASH("display-power")
 
 # Initialise Optional LED displays
 sbn LedDisplay LedIdTemperature Mode 4 # Degrees Celcius
 sbn LedDisplay LedIdPressure Mode 14 # Pa
 sbn LedDisplay LedIdCharge Mode 1 # Percentage
+sbn LedDisplay LedIdPower Mode 2 # Watts
 
 # Initialise pressure to minimum
 move CurrentPressure MinPressure
@@ -113,9 +117,21 @@ sleep 60
 j ra
 
 updateDisplays:
+# Save some power
+lbn TmpRegister1 ProximitySensor Activate # 1 if player within sensor range
+sbn LedDisplay LedIdCharge On TmpRegister1
+sbn LedDisplay LedIdPower On TmpRegister1
+sbn LedDisplay LedIdPressure On TmpRegister1
+sbn LedDisplay LedIdTemperature On TmpRegister1
+
 # Battery Charge
 sbn LedDisplay LedIdCharge Color Color.Blue
 sbn LedDisplay LedIdCharge Setting BatteriesCharge # Percentage
+
+# Power Generation
+sbn LedDisplay LedIdPower Color Color.Yellow
+l TmpRegister1 GasGenerator PowerGeneration # Watts
+sbn LedDisplay LedIdPower Setting TmpRegister1
 
 # Fuel Pressure
 sbn LedDisplay LedIdPressure Color Color.Orange

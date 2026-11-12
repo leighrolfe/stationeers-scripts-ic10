@@ -25,14 +25,22 @@ alias TmpRegister1 r14
 alias TmpRegister2 r15
 
 # Constants
+define KelvinOffset 273.15 # 0 C
 define MinTemp 274.15 # 1 C
 define MaxPressure 45 # kPa
 define MinPressure 5 # kPa
 define DeadzoneLow 293.15 # 20 C
 define DeadzoneHigh 313.15 # 40 C
 
-define BatteriesNetwork HASH("StructureBattery")
-define MaxBatteryCharge 0.95 # 95% charge max
+define BatteriesNetwork HASH("StructureBattery") # Choose your main battery
+define MaxBatteryCharge 0.8 # 80% charge max
+
+# Optional LED displays
+define LedDisplay HASH("StructureConsoleLED1x3") # Choose your LED size
+define TempDisplayName HASH("display-temp") # Use the labeller to set LED to this
+
+# Initialise Optional LED displays
+sbn LedDisplay TempDisplayName Mode 4 # Degrees Celcius
 
 # Initialise pressure to minimum
 move CurrentPressure MinPressure
@@ -43,6 +51,7 @@ yield
 
 l CurrentTemp TempSensor Temperature
 
+jal updateDisplays
 jal setHeaters
 jal setFans
 jal setPressure
@@ -97,4 +106,15 @@ j ra
 # If generator is turned off due to battery limit, wait for a bit to prevent start stop
 pauseOnBatteryLimit:
 sleep 60
+j ra
+
+updateDisplays:
+# Push current temperature to the LED display in C
+sub TmpRegister1 CurrentTemp KelvinOffset
+sbn LedDisplay TempDisplayName Setting TmpRegister1
+slt TmpRegister1 CurrentTemp DeadzoneLow
+sgt TmpRegister2 CurrentTemp DeadzoneHigh
+select TmpRegister1 TmpRegister1 Color.Blue Color.Green
+select TmpRegister1 TmpRegister2 Color.Red TmpRegister1
+sbn LedDisplay TempDisplayName Color TmpRegister1
 j ra

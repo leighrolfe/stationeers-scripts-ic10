@@ -1,0 +1,38 @@
+# Tracks all solar panel types to the sun using a daylight
+# sensor's orientation output.
+
+alias DaylightSensor d0
+alias Horiz r0
+alias Vert r1
+
+define SolarPanelType01 HASH("StructureSolarPanel")
+define SolarPanelType02 HASH("StructureSolarPanelDual")
+define SolarPanelType03 HASH("StructureSolarPanelReinforced")
+define SolarPanelType04 HASH("StructureSolarPanelDualReinforced")
+define SolarPanelType05 HASH("StructureSolarPanel1x5ReinforcedSingle")
+define SolarPanelType06 HASH("StructureSolarPanel1x5ReinforcedDual")
+define HorizOffset 270
+define VertOffset 90
+define FullCircle 360
+
+main:
+yield
+
+l Horiz DaylightSensor Horizontal
+l Vert DaylightSensor Vertical
+add Horiz Horiz HorizOffset
+add Vert Vert VertOffset
+mod Horiz Horiz FullCircle
+sb SolarPanelType01 Horizontal Horiz
+sb SolarPanelType01 Vertical Vert
+sb SolarPanelType02 Horizontal Horiz
+sb SolarPanelType02 Vertical Vert
+sb SolarPanelType03 Horizontal Horiz
+sb SolarPanelType03 Vertical Vert
+sb SolarPanelType04 Horizontal Horiz
+sb SolarPanelType04 Vertical Vert
+sb SolarPanelType05 Horizontal Horiz
+sb SolarPanelType05 Vertical Vert
+sb SolarPanelType06 Horizontal Horiz
+sb SolarPanelType06 Vertical Vert
+j main   

@@ -2,8 +2,8 @@
 # sensor's orientation.
 
 # Manually set these values to match your daylight sensor orientation
-define HorizontalOffset 270
-define VerticalOffset 90
+define HorizontalOffset 0
+define VerticalOffset 0
 
 # All programmable solar panel types (type hash for sb group writes)
 # Standard solar panels

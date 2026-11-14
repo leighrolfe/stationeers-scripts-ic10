@@ -1,0 +1,87 @@
+define daa 273.15
+define dab 274.15
+define dac 45
+define dad 5
+define dae 293.15
+define daf 313.15
+define dag HASH("StructureBattery")
+define dah 0.8
+define dai HASH("StructureProximitySensor")
+define daj HASH("fuel-room-sensor-player")
+define dak HASH("StructureConsoleLED1x3")
+define dal HASH("display-temp")
+define dam HASH("display-pressure")
+define dan HASH("display-charge")
+define dao HASH("display-power")
+sbn dak dal Mode 4
+sbn dak dam Mode 14
+sbn dak dan Mode 1
+sbn dak dao Mode 2
+move r4 dad
+dlaa:
+yield
+l r0 d0 Temperature
+jal dlag
+jal dlab
+jal dlac
+jal dlad
+jal dlae
+sleep 1
+j dlaa
+dlab:
+sgt r2 dab r0
+s d5 On r2
+j ra
+dlac:
+l r1 d3 On
+select r14 r1 daf dae
+sge r1 r0 r14
+s d3 On r1
+s d4 On r1
+j ra
+dlad:
+slt r5 r0 dae
+sgt r14 r0 daf
+sub r6 r5 r14
+add r4 r4 r6
+slt r14 r4 dad
+select r4 r14 dad r4
+sgt r14 r4 dac
+select r4 r14 dac r4
+s d1 Setting r4
+j ra
+dlae:
+lb r7 dag Ratio Average
+sgt r14 r0 dab
+slt r15 r7 dah
+and r3 r14 r15
+s d2 On r3
+beq r15 0 dlaf
+j ra
+dlaf:
+sleep 60
+j ra
+dlag:
+lbn r14 dai daj Activate Average
+sbn dak dan On r14
+sbn dak dao On r14
+sbn dak dam On r14
+sbn dak dal On r14
+sb HASH("StructureLightLongAngled") On r14
+sb HASH("StructureWallLight") On r14
+sbn dak dan Color Color.Blue
+sbn dak dan Setting r7
+sbn dak dao Color Color.Yellow
+l r14 d2 PowerGeneration
+sbn dak dao Setting r14
+sbn dak dam Color Color.Orange
+mul r14 r4 1000
+sbn dak dam Setting r14
+sub r14 r0 daa
+sbn dak dal Setting r14
+slt r14 r0 dae
+sgt r15 r0 daf
+select r14 r14 Color.Blue Color.Green
+select r14 r15 Color.Red r14
+sbn dak dal Color r14
+j ra

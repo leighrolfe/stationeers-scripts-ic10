@@ -1,38 +1,62 @@
 # Tracks all solar panel types to the sun using a daylight
-# sensor's orientation output.
+# sensor's orientation.
 
-alias DaylightSensor d0
-alias Horiz r0
-alias Vert r1
+# Manually set these values to match your daylight sensor orientation
+define HorizontalOffset 270
+define VerticalOffset 90
 
+# All programmable solar panel types (type hash for sb group writes)
+# Standard solar panels
 define SolarPanelType01 HASH("StructureSolarPanel")
 define SolarPanelType02 HASH("StructureSolarPanelDual")
-define SolarPanelType03 HASH("StructureSolarPanelReinforced")
-define SolarPanelType04 HASH("StructureSolarPanelDualReinforced")
-define SolarPanelType05 HASH("StructureSolarPanel1x5ReinforcedSingle")
-define SolarPanelType06 HASH("StructureSolarPanel1x5ReinforcedDual")
-define HorizOffset 270
-define VertOffset 90
-define FullCircle 360
+define SolarPanelType03 HASH("StructureSolarPanel1x5")
+define SolarPanelType04 HASH("StructureSolarPanel1x5Single")
+
+# Heavy solar panels
+define SolarPanelType05 HASH("StructureSolarPanelReinforced")
+define SolarPanelType06 HASH("StructureSolarPanelDualReinforced")
+define SolarPanelType07 HASH("StructureSolarPanel1x5Reinforced")
+define SolarPanelType08 HASH("StructureSolarPanel1x5ReinforcedSingle")
+
+define MaxAngle 360
+
+# Set the daylight sensor device in the housing
+alias DaylightSensor d0
+
+# Registers
+alias TargetHorizontal r0
+alias TargetVertical r1
+alias TmpRegister01 r14
+alias TmpRegister02 r15
 
 main:
 yield
 
-l Horiz DaylightSensor Horizontal
-l Vert DaylightSensor Vertical
-add Horiz Horiz HorizOffset
-add Vert Vert VertOffset
-mod Horiz Horiz FullCircle
-sb SolarPanelType01 Horizontal Horiz
-sb SolarPanelType01 Vertical Vert
-sb SolarPanelType02 Horizontal Horiz
-sb SolarPanelType02 Vertical Vert
-sb SolarPanelType03 Horizontal Horiz
-sb SolarPanelType03 Vertical Vert
-sb SolarPanelType04 Horizontal Horiz
-sb SolarPanelType04 Vertical Vert
-sb SolarPanelType05 Horizontal Horiz
-sb SolarPanelType05 Vertical Vert
-sb SolarPanelType06 Horizontal Horiz
-sb SolarPanelType06 Vertical Vert
-j main   
+# Read sensor and compute target angles
+readSensor:
+l TargetHorizontal DaylightSensor Horizontal
+l TargetVertical DaylightSensor Vertical
+add TargetHorizontal TargetHorizontal HorizontalOffset
+add TargetVertical TargetVertical VerticalOffset
+mod TargetHorizontal TargetHorizontal MaxAngle
+
+# Write computed angles to all panel types
+setPanels:
+sb SolarPanelType01 Horizontal TargetHorizontal
+sb SolarPanelType01 Vertical TargetVertical
+sb SolarPanelType02 Horizontal TargetHorizontal
+sb SolarPanelType02 Vertical TargetVertical
+sb SolarPanelType03 Horizontal TargetHorizontal
+sb SolarPanelType03 Vertical TargetVertical
+sb SolarPanelType04 Horizontal TargetHorizontal
+sb SolarPanelType04 Vertical TargetVertical
+sb SolarPanelType05 Horizontal TargetHorizontal
+sb SolarPanelType05 Vertical TargetVertical
+sb SolarPanelType06 Horizontal TargetHorizontal
+sb SolarPanelType06 Vertical TargetVertical
+sb SolarPanelType07 Horizontal TargetHorizontal
+sb SolarPanelType07 Vertical TargetVertical
+sb SolarPanelType08 Horizontal TargetHorizontal
+sb SolarPanelType08 Vertical TargetVertical
+
+j main

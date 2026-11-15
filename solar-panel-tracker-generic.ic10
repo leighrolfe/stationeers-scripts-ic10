@@ -1,9 +1,8 @@
-# Tracks all solar panel types to the sun using a daylight
-# sensor's orientation.
+# This script aims all solar panel types at the sun using a daylight sensor on d0.
 
 # Manually set these values to match your daylight sensor orientation
 define HorizontalOffset 0
-define VerticalOffset 0
+define VerticalOffset 0 # Wall sensor = 0 | Flat (roof) sensor = 90
 
 # All programmable solar panel types (type hash for sb group writes)
 # Standard solar panels
@@ -29,16 +28,27 @@ alias TargetVertical r1
 alias TmpRegister01 r14
 alias TmpRegister02 r15
 
+# Read the sensor, apply offsets, and run each tick
 main:
 yield
 
+jal readSensor
+jal setPanels
+
+j main
+
 # Read sensor and compute target angles
 readSensor:
-l TargetHorizontal DaylightSensor Horizontal
-l TargetVertical DaylightSensor Vertical
-add TargetHorizontal TargetHorizontal HorizontalOffset
-add TargetVertical TargetVertical VerticalOffset
-mod TargetHorizontal TargetHorizontal MaxAngle
+# Set horizontal target
+l TmpRegister01 DaylightSensor Horizontal
+add TmpRegister02 TmpRegister01 HorizontalOffset
+mod TargetHorizontal TmpRegister02 MaxAngle
+
+# Set vertical target
+l TmpRegister01 DaylightSensor Vertical
+add TargetVertical TmpRegister01 VerticalOffset
+
+j ra
 
 # Write computed angles to all panel types
 setPanels:
@@ -59,4 +69,4 @@ sb SolarPanelType07 Vertical TargetVertical
 sb SolarPanelType08 Horizontal TargetHorizontal
 sb SolarPanelType08 Vertical TargetVertical
 
-j main
+j ra

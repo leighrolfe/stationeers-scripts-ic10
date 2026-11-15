@@ -1,0 +1,41 @@
+define daa 0
+define dab 0
+define dac HASH("StructureSolarPanel")
+define dad HASH("StructureSolarPanelDual")
+define dae HASH("StructureSolarPanel1x5")
+define daf HASH("StructureSolarPanel1x5Single")
+define dag HASH("StructureSolarPanelReinforced")
+define dah HASH("StructureSolarPanelDualReinforced")
+define dai HASH("StructureSolarPanel1x5Reinforced")
+define daj HASH("StructureSolarPanel1x5ReinforcedSingle")
+define dak 360
+dlaa:
+yield
+jal dlab
+jal dlac
+j dlaa
+dlab:
+l r14 d0 Horizontal
+add r15 r14 daa
+mod r0 r15 dak
+l r14 d0 Vertical
+add r1 r14 dab
+j ra
+dlac:
+sb dac Horizontal r0
+sb dac Vertical r1
+sb dad Horizontal r0
+sb dad Vertical r1
+sb dae Horizontal r0
+sb dae Vertical r1
+sb daf Horizontal r0
+sb daf Vertical r1
+sb dag Horizontal r0
+sb dag Vertical r1
+sb dah Horizontal r0
+sb dah Vertical r1
+sb dai Horizontal r0
+sb dai Vertical r1
+sb daj Horizontal r0
+sb daj Vertical r1
+j ra
